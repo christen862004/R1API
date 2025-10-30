@@ -1,0 +1,77 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using R1API.Models;
+
+namespace R1API.Controllers
+{
+    //api/Department
+    [Route("api/[controller]")]
+    [ApiController]//controller api (binding - validation)
+    public class DepartmentController : ControllerBase
+    {
+        private readonly ITIContext ctx;
+
+        public DepartmentController(ITIContext ctx)
+        {
+            this.ctx = ctx;
+        }
+        //CRUD
+        [HttpGet]//Verb GET : /api/Department
+        public IActionResult ShowAllDepartment()
+        {
+            //ctx.Set<T>().Find(1);
+            //ctx.Set<T>().FirstOrDefault(e=>e.id)
+            
+            List<Department> depts = ctx.Departments.ToList();
+            return Ok(depts);//
+        }
+        [HttpGet("{id:int}")]//MEtho: GET /api/Departent/10
+        public IActionResult GetByID(int id)
+        {
+            Department? dept = ctx.Departments.FirstOrDefault(d=>d.Id==id);
+            return Ok(dept);
+        }
+
+        [HttpGet("{name:alpha}")]//MEtho: GET /api/Departent/SD
+        public IActionResult GetByName(string name)
+        {
+            Department? dept = ctx.Departments.FirstOrDefault(d => d.Name.Contains(name));
+            return Ok(dept);
+        }
+
+
+
+        [HttpPost]//Verb POST : /api/Department
+        public IActionResult New(Department deptFromReq)
+        {
+            if (ModelState.IsValid)
+            {
+                ctx.Departments.Add(deptFromReq);
+                ctx.SaveChanges();
+                //return Created($"http://localhost:10441/api/department/{deptFromReq.Id}",deptFromReq);
+                return CreatedAtAction("GetByID", new { id = deptFromReq.Id }, deptFromReq);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPut("{id:int}")]//PUT /api/Department/id
+        public IActionResult Edit(int id,Department deptFromRe)
+        {
+            if (ModelState.IsValid)
+            {
+                Department deptFromDB = ctx.Departments.FirstOrDefault(d => d.Id == id);
+                deptFromDB.Name = deptFromRe.Name;
+                deptFromDB.ManagerName = deptFromRe.ManagerName;
+                ctx.SaveChanges();
+                return NoContent();
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpDelete("{id:int}")]
+        public IActionResult remove(int id)
+        {
+            Department dept = ctx.Departments.FirstOrDefault(d => d.Id == id);
+            ctx.Departments.Remove(dept);
+            ctx.SaveChanges();
+            return NoContent();
+        }
+    }
+}

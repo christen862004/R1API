@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>Internal Consumer</h1>
+    <input type="text" id="empNo" />
+    <input type="button" value="Get Emp Data" onclick="GetData()" />
+    <div id="Details">
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function GetData() {
+            var empId = $("#empNo").val();//1
+
+            console.log(empId);
+            $.ajax({
+                url: "/api/Employee/" + empId,///api/employee/1
+                success: function (result) {
+                    //$("#div1").html(result);
+                    console.log(result)
+                    $("#Details").html(
+                        `<p>Name: ${result.empName}</p><p>Department ${result.deptName}</p>`
+                    );
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -12,14 +12,24 @@ namespace R1API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().ConfigureApiBehaviorOptions(
+                options =>
+                    options.SuppressModelStateInvalidFilter = true); 
+
+
             builder.Services.AddDbContext<ITIContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
 
             });
 
-
+            builder.Services.AddCors(policy =>
+            {
+                policy.AddPolicy("MyPolicy", policyBuilder =>
+                {
+                    policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -33,6 +43,9 @@ namespace R1API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseStaticFiles();
+            
+            app.UseCors("MyPolicy");//ony 
 
             app.UseAuthorization();
 

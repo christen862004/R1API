@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using R1API.DTOS;
 using R1API.Models;
@@ -17,6 +18,7 @@ namespace R1API.Controllers
             this.ctx = ctx;
         }
         //CRUD
+        [Authorize]
         [HttpGet]//Verb GET : /api/Department
         public IActionResult ShowAllDepartment()
         {

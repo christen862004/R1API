@@ -38,7 +38,7 @@ namespace R1API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("R1API.Models.Employee", b =>
@@ -66,7 +66,7 @@ namespace R1API.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("R1API.Models.Employee", b =>
